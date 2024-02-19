@@ -30,3 +30,7 @@ Week 6 focusess on dynamic parallelism in CUDA that is an ability to launch mult
 ## Week 7
 
 In Week 7, we focus on concurrency using CUDA streams. We cover the streams in detail using three examples, [CUDA_Streams](Week7/CUDA_Streams.ipynb), [CUDA_Streams](Week7/CUDA_Streams.ipynb) and [CUDA_Streams_SyncEvents](Week7/CUDA_Streams_SyncEvents.ipynb). 
+
+## Week 8
+
+Week 8 starts with understanding of global static memory, unified memory and zero copy memory. We give three examples on these including [globalStaticMemory](Week8/globalStaticMemory.ipynb), [SumArrayZeroCopy](Week8/SumArrayZeroCopy.ipynb) and [DotProductGPU_UnifiedMemory](Week8/DotProductGPU_UnifiedMemory.ipynb). 
