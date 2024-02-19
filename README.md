@@ -22,3 +22,11 @@ We extend our knowledge by starting work in 2D. We first start with creating a s
 We now see how we can use shared memory to efficienlty optimize writing to device memory across multple threads concurrently. The first example [Shared Memory Bitmap](Week5/SharedMemoryBitmap.ipynb) demonstrates a simple example of creating a bitmap image using shared memory to store data in a bitmap using multiple parallel threads. The examples demonstrates the general dataflow pattern of working with the shared memory. We create the shared memory buffer first. Then we ask each thread to fill up its data from the global memory to shared memory. Next, we put the __syncthreads() call which inserts a synchronization barrier. This barrier ensures that the following execution is halted until all threads in the block have finished writing to their shared memory location. After __syncthreads call, each threads reads data from its own shared memory location for processing. If we comment the __syncthreads() call we see noticable garbage values in the output as there is no guarantee that all threads have written to their shared memory location. 
 
 The second example [WaveformsMemoryBitmap](Week5/WaveformsMemoryBitmap.ipynb) details how you may generate different types of waves in memory using CUDA. The third example [MatrixMultiplicationTiled](Week5/MatrixMultiplicationTiled.ipynb) optimizes the MatrixMultiplication example through tiliing whereby tile of data is copied from device memory into shared memory and then used for matrix multiplication. We do comparison of the naive matrixmultiplication against CPU as well as the optimized matrix multiplication on the GPU.
+
+## Week 6
+
+Week 6 focusess on dynamic parallelism in CUDA that is an ability to launch multiple CUDA kernels from a single CUDA kernel. We give one example of this [CUDA_DynamicParallelism](Week6/CUDA_DynamicParallelism.ipynb).
+
+## Week 7
+
+In Week 7, we focus on concurrency using CUDA streams. We cover the streams in detail using three examples, [CUDA_Streams](Week7/CUDA_Streams.ipynb), [CUDA_Streams](Week7/CUDA_Streams.ipynb) and [CUDA_Streams_SyncEvents](Week7/CUDA_Streams_SyncEvents.ipynb). 
