@@ -34,3 +34,31 @@ In Week 7, we focus on concurrency using CUDA streams. We cover the streams in d
 ## Week 8
 
 Week 8 starts with understanding of global static memory, unified memory and zero copy memory. We give three examples on these including [globalStaticMemory](Week8/globalStaticMemory.ipynb), [SumArrayZeroCopy](Week8/SumArrayZeroCopy.ipynb) and [DotProductGPU_UnifiedMemory](Week8/DotProductGPU_UnifiedMemory.ipynb). 
+
+## Week 9
+
+We start Week 9 with understanding parallel reduction which is usually used to parallelize sum calculation on the GPU. The first example [ReductionSumGPU](Week9/ReductionSumGPU.ipynb) demonstrates how to implement naive reduction on the CPU and then on the GPU. Finally, we see an implementation of reduction which is optimized by avoiding branch divergence. The second example [DotProductGPU](Week9/DotProductGPU.ipynb) calculates dot product on the GPU using shared memory and parallel reduction. In the first phase, the vector products are calculated and stored in shared memory. In the second phase, the product pair are summed using parallel reduction. Finally, we cover how to do basic profiling of our code using tools that ship with the NVIDIA CUDA Computing SDK namely nvprof and ncu in [TestProfilers_nvprof_ncu](Week9/TestProfilers_nvprof_ncu.ipynb).
+
+## Week 10
+
+In Week 10, we talk about using CUDA in python code using Numba and PyCUDA and using teh NVIDIA Thrust library which is STL for CUDA. Two examples are given for each in [HelloNumba](Week10/HelloNumba.ipynb) and [HelloPyCUDA](Week10/HelloPyCUDA.ipynb).
+
+## Week 11
+
+With Week 11, we start working on parallel patterns. We talk about two patterns in Week 1. Convolution and Prefix Sum. The first pattern (Convolution) which helps us filter a given set of data with some set of coefficients (kernel or mask). The first example [Conv1D](Week11/Conv1D.ipynb) shows how to carry out 1D convolution in CUDA. The next example [Conv1D_Modified](Week11/Conv1D_Modified.ipynb) shows how to move the filter mask into constant memory to optimize read accessses inside the CUDA kernel. Finally, we wrap the dicussion on convolution with implementing tiling whereby halo elements are moved from global memory into shared memory to increase the memory acces bandwidth. This is shown in [Conv1D_Tiled](Week11/Conv1D_Tiled.ipynb) example. Finally, we give an example of 2D convolution on the host [Conv2D](Week11/Conv2D.ipynb) and request the students to implement the 2D convolution on the GPU and then optimize it using tiling as an exercise. 
+
+## Week 12
+
+In Week 12, we move to prefix sum. Two examples are given: [PrefixSum_Correct](Week12/PrefixSum_Correct.ipynb) and [PrefixSum_WorkEfficient](Week12/PrefixSum_WorkEfficient.ipynb).
+
+## Week 13
+
+Week 13 focuses on the third parallel pattern that is histogram. We talk about four different strategies for computing the histogram. These strategies are given in four examples: [Strategy 1](Week13/Histogram_Strategy_1.ipynb), [Strategy 2](Week13/Histogram_Strategy_2.ipynb), [Strategy 3](Week13/Histogram_Strategy_3.ipynb) and [Strategy 4](Week13/Histogram_Strategy_4.ipynb).
+
+## Week 14
+
+Week 14 will be focusing on SpMV formats. We will look at the stardard data formats for use in Sparse Matrix Vector multiplication. The example implementation is shared in [SpMV_Formats](Week14/SpMV_Formats.ipynb).
+
+## Week 15
+
+The final week is reserved for project presentations therefore there will be no code examples in this week.
