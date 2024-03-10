@@ -1,10 +1,19 @@
-#include <iostream> 
+#include <iostream>
 #include <vector>
+#include <Eigen/Dense>
+#include <numeric> //std::iota
+#include <chrono>
+#include <fstream>
+
 #include "NeuralNetwork.h"
 #include "ActivationAndLossFunctions.h"
 
-int main()
-{ 
+void timeAndStoreOperations(const std::string& filePath)
+{
+	std::ofstream outputFile(filePath, std::ios::app);
+
+
+	// Perform operations
 	std::cout << "Using Eigen ver: " << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION << "." << EIGEN_MINOR_VERSION << std::endl;
 
 	//test the XOR solver
@@ -18,6 +27,9 @@ int main()
 	nn.add(new ActivationLayer(tanh2, tanh_prime));
 
 	nn.use(mse, mse_prime);
+
+	// Measure execution time
+	auto startTime = std::chrono::high_resolution_clock::now();
 	
 	//train
 	nn.fit(x_train, y_train, 1000, 0.1f);
@@ -25,7 +37,22 @@ int main()
 	//test
 	std::vector<Eigen::MatrixXf> output = nn.predict(x_train);
 	for (Eigen::MatrixXf out : output)
-		std::cout << out << std::endl; 
+		std::cout << out << std::endl;
+
+	// End timing
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+	// Store duration in the text file
+	outputFile << duration << std::endl;
+
+	outputFile.close();
+}
+
+int main()
+{
+	for (int i = 0; i < 3; i++)
+		timeAndStoreOperations("cpu_xor.txt");
 
 	return 0;
 }
