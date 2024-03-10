@@ -47,7 +47,7 @@ Eigen::MatrixXf cudaMatrixMul(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
         std::cout << M.rows() << "," << M.cols() << std::endl;
         std::cout << N.rows() << "," << N.cols() << std::endl;
         std::cout << "Matrix dimensions are not compatible for multiplication" << std::endl;
-        return Eigen::MatrixXf::Zero(1, 1);
+        return;
     }
     int common = M.cols();
     float *d_M, *d_N, *d_P;
@@ -62,7 +62,6 @@ Eigen::MatrixXf cudaMatrixMul(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     checkCudaErr(cudaMemcpy(d_N, N.data(), size_N, cudaMemcpyHostToDevice), "Memcpy N");
 
     dim3 dimBlock(16, 16);
-    // not considering column major format here. Doing it in kernel
     dim3 dimGrid((rows + dimBlock.x - 1) / dimBlock.x, (cols + dimBlock.y - 1) / dimBlock.y);
     cudaMatrixMulKernel<<<dimGrid, dimBlock>>>(d_M, d_N, d_P, rows, cols, common);
     checkCudaErr(cudaDeviceSynchronize(), "Syncronization");

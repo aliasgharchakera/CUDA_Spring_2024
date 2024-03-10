@@ -17,11 +17,11 @@ void printMatrixSize(const std::string msg, const Eigen::MatrixXf &m)
   std::cout << msg.c_str() << "[" << m.rows() << "," << m.cols() << "]" << std::endl;
 }
 
-class Layer
+class GPULayer
 {
 public:
-  Layer() : input(), output() {}
-  virtual ~Layer() {}
+  GPULayer() : input(), output() {}
+  virtual ~GPULayer() {}
 
   virtual Eigen::MatrixXf forwardPropagation(Eigen::MatrixXf &input) = 0;
   virtual Eigen::MatrixXf backwardPropagation(Eigen::MatrixXf &output, float learningRate) = 0;
@@ -31,10 +31,10 @@ protected:
   Eigen::MatrixXf output;
 };
 
-class DenseLayer : public Layer
+class GPUDenseLayer : public GPULayer
 {
 public:
-  DenseLayer(int inputSize, int outputSize)
+  GPUDenseLayer(int inputSize, int outputSize)
   {
     // Eigen::MatrixXf::Random returns values from [-1,1] we should scale it to [-0.5,0.5]
     // Do the matrix multiplication on the GPU
@@ -69,11 +69,11 @@ private:
   Eigen::MatrixXf bias;
 };
 
-class ActivationLayer : public Layer
+class GPUActivationLayer : public GPULayer
 {
 public:
-  ActivationLayer(std::function<float(float)> activation,
-                  std::function<float(float)> activationPrime)
+  GPUActivationLayer(std::function<float(float)> activation,
+                     std::function<float(float)> activationPrime)
   {
     this->activation = activation;
     this->activationPrime = activationPrime;
@@ -91,8 +91,7 @@ public:
   // learningRate is not used because there is no "learnable" parameters.
   Eigen::MatrixXf backwardPropagation(Eigen::MatrixXf &outputError, float learningRate)
   {
-    // Do the matrix multiplication on the GPU
-    return cudaMatrixMul(input.unaryExpr(activationPrime).array(), outputError.array());
+    return (input.unaryExpr(activationPrime).array() * outputError.array()).matrix();
   }
 
 private:
@@ -100,7 +99,7 @@ private:
   std::function<float(float)> activationPrime;
 };
 
-class FlattenLayer : public Layer
+class GPUFlattenLayer : public GPULayer
 {
 public:
   Eigen::MatrixXf forwardPropagation(Eigen::MatrixXf &input)
@@ -117,13 +116,13 @@ public:
   }
 };
 
-class Network
+class GPUNetwork
 {
 public:
-  Network() {}
-  virtual ~Network() {}
+  GPUNetwork() {}
+  virtual ~GPUNetwork() {}
 
-  void add(Layer *layer)
+  void add(GPULayer *layer)
   {
     layers.push_back(layer);
   }
@@ -144,7 +143,7 @@ public:
     for (int j = 0; j < samples; ++j)
     {
       Eigen::MatrixXf output = input.row(j);
-      for (Layer *layer : layers)
+      for (GPULayer *layer : layers)
         output = layer->forwardPropagation(output);
 
       result.push_back(output);
@@ -178,7 +177,7 @@ public:
         int index = order[j];
         Eigen::MatrixXf output = x_train.row(index);
 
-        for (Layer *layer : layers)
+        for (GPULayer *layer : layers)
           output = layer->forwardPropagation(output);
 
         // compute loss(for display purpose only)
@@ -189,7 +188,7 @@ public:
         // backward propagation
         Eigen::MatrixXf error = lossPrime(y, output);
 
-        for (std::vector<Layer *>::reverse_iterator layer = layers.rbegin(); layer != layers.rend(); ++layer)
+        for (std::vector<GPULayer *>::reverse_iterator layer = layers.rbegin(); layer != layers.rend(); ++layer)
           error = (*layer)->backwardPropagation(error, learningRate);
       }
       err /= (float)samples;
@@ -198,7 +197,7 @@ public:
   }
 
 protected:
-  std::vector<Layer *> layers;
+  std::vector<GPULayer *> layers;
   std::function<float(Eigen::MatrixXf &, Eigen::MatrixXf &)> loss;
   std::function<Eigen::MatrixXf(Eigen::MatrixXf &, Eigen::MatrixXf &)> lossPrime;
 };

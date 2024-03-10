@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.pdf": "latex",
+        "vector": "cpp",
+        "array": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "alignedvector3": "cpp",
+        "*.inc": "cpp"
+    }
+}
