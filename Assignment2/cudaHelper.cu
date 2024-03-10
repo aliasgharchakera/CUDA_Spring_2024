@@ -47,7 +47,7 @@ Eigen::MatrixXf cudaMatrixMul(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
         std::cout << M.rows() << "," << M.cols() << std::endl;
         std::cout << N.rows() << "," << N.cols() << std::endl;
         std::cout << "Matrix dimensions are not compatible for multiplication" << std::endl;
-        return;
+        return Eigen::MatrixXf::Zero(1, 1);
     }
     int common = M.cols();
     float *d_M, *d_N, *d_P;
