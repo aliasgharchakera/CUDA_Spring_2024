@@ -2,8 +2,6 @@
 #include <Eigen/Dense>
 #include <cuda_runtime.h>
 
-#include "Common.h"
-
 inline cudaError_t checkCudaErr(cudaError_t err, const char *msg)
 {
     if (err != cudaSuccess)
@@ -60,8 +58,8 @@ Eigen::MatrixXf cudaMatrixMul(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     cudaMalloc((void **)&d_M, size_M);
     cudaMalloc((void **)&d_N, size_N);
     cudaMalloc((void **)&d_P, size_P);
-    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice));
-    checkCudaErr(cudaMemcpy(d_N, N.data(), size_N, cudaMemcpyHostToDevice));
+    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice), "Memcpy M");
+    checkCudaErr(cudaMemcpy(d_N, N.data(), size_N, cudaMemcpyHostToDevice), "Memcpy N");
 
     dim3 dimBlock(16, 16);
     // not considering column major format here. Doing it in kernel
@@ -71,7 +69,7 @@ Eigen::MatrixXf cudaMatrixMul(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     checkCudaErr(cudaGetLastError(), "GPU Error");
 
     Eigen::MatrixXf P(rows, cols);
-    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost));
+    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost), "Memcpy P");
     cudaFree(d_M);
     cudaFree(d_N);
     cudaFree(d_P);
@@ -88,7 +86,7 @@ Eigen::MatrixXf cudaMatrixScalarMul(const Eigen::MatrixXf &M, float N)
     int size_P = rows * cols * sizeof(float);
     cudaMalloc((void **)&d_M, size_M);
     cudaMalloc((void **)&d_P, size_P);
-    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice));
+    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice), "Memcpy M");
 
     dim3 dimBlock(16, 16);
     dim3 dimGrid((rows + dimBlock.x - 1) / dimBlock.x, (cols + dimBlock.y - 1) / dimBlock.y);
@@ -97,7 +95,7 @@ Eigen::MatrixXf cudaMatrixScalarMul(const Eigen::MatrixXf &M, float N)
     checkCudaErr(cudaGetLastError(), "GPU Error");
 
     Eigen::MatrixXf P(rows, cols);
-    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost));
+    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost), "Memcpy P");
     cudaFree(d_M);
     cudaFree(d_P);
 
@@ -124,8 +122,8 @@ Eigen::MatrixXf cudaMatrixAdd(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     cudaMalloc((void **)&d_M, size_M);
     cudaMalloc((void **)&d_N, size_M);
     cudaMalloc((void **)&d_P, size_P);
-    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice));
-    checkCudaErr(cudaMemcpy(d_N, N.data(), size_M, cudaMemcpyHostToDevice));
+    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice), "Memcpy M");
+    checkCudaErr(cudaMemcpy(d_N, N.data(), size_M, cudaMemcpyHostToDevice), "Memcpy N");
 
     dim3 dimBlock(16, 16);
     dim3 dimGrid((rows + dimBlock.x - 1) / dimBlock.x, (cols + dimBlock.y - 1) / dimBlock.y);
@@ -134,7 +132,7 @@ Eigen::MatrixXf cudaMatrixAdd(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     checkCudaErr(cudaGetLastError(), "GPU Error");
 
     Eigen::MatrixXf P(rows, cols);
-    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost));
+    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost), "Memcpy P");
     cudaFree(d_M);
     cudaFree(d_N);
     cudaFree(d_P);
@@ -162,8 +160,8 @@ Eigen::MatrixXf cudaMatrixSub(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     cudaMalloc((void **)&d_M, size_M);
     cudaMalloc((void **)&d_N, size_M);
     cudaMalloc((void **)&d_P, size_P);
-    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice));
-    checkCudaErr(cudaMemcpy(d_N, N.data(), size_M, cudaMemcpyHostToDevice));
+    checkCudaErr(cudaMemcpy(d_M, M.data(), size_M, cudaMemcpyHostToDevice), "Memcpy M");
+    checkCudaErr(cudaMemcpy(d_N, N.data(), size_M, cudaMemcpyHostToDevice), "Memcpy N");
 
     dim3 dimBlock(16, 16);
     dim3 dimGrid((rows + dimBlock.x - 1) / dimBlock.x, (cols + dimBlock.y - 1) / dimBlock.y);
@@ -172,7 +170,7 @@ Eigen::MatrixXf cudaMatrixSub(const Eigen::MatrixXf &M, const Eigen::MatrixXf &N
     checkCudaErr(cudaGetLastError(), "GPU Error");
 
     Eigen::MatrixXf P(rows, cols);
-    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost));
+    checkCudaErr(cudaMemcpy(P.data(), d_P, size_P, cudaMemcpyDeviceToHost), "Memcpy P");
     cudaFree(d_M);
     cudaFree(d_N);
     cudaFree(d_P);
