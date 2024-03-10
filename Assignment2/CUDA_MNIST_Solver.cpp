@@ -5,6 +5,8 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <string>
+#include <chrono>
+#include <fstream>
 
 #include <numeric> //std::iota
 
@@ -122,14 +124,11 @@ void input(std::string ipath, std::string lpath, std::string ipath2, std::string
   icin.close();
 }
 
-int main()
+void timeAndStoreOperations(const std::string& filePath)
 {
-  std::cout << "Using Eigen ver: " << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION << "." << EIGEN_MINOR_VERSION << std::endl;
-
-  input("/content/data/train-images-idx3-ubyte",
-        "/content/data/train-labels-idx1-ubyte",
-        "/content/data/t10k-images-idx3-ubyte",
-        "/content/data/t10k-labels-idx1-ubyte");
+	std::ofstream outputFile(filePath, std::ios::app);
+	std::cout << "Using Eigen ver: " << EIGEN_WORLD_VERSION << "." << 
+								EIGEN_MAJOR_VERSION << "." << EIGEN_MINOR_VERSION << std::endl;
 
   GPUNetwork nn;
   nn.add(new GPUDenseLayer(28 * 28, 100));
@@ -145,10 +144,21 @@ int main()
   printMatrixSize("x_train", x_train);
   printMatrixSize("y_train", y_train);
 
+  // Measure execution time
+	auto startTime = std::chrono::high_resolution_clock::now();
+
   nn.fit(x_train.block<1000, 784>(0, 0), y_train.block<1000, 10>(0, 0), epoch, 0.1f);
 
   // test
   std::vector<Eigen::MatrixXf> output = nn.predict(x_valid(Eigen::seq(0, 2), Eigen::indexing::all));
+
+  // End timing
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+	outputFile << duration << std::endl;
+
+	outputFile.close();
 
   std::cout << "Predicted values: " << std::endl;
   for (Eigen::MatrixXf out : output)
@@ -183,6 +193,15 @@ int main()
     }
     std::cout << maxIndex << " ";
   }
+}
 
+int main()
+{
+  input("/content/data/train-images-idx3-ubyte",
+      "/content/data/train-labels-idx1-ubyte",
+      "/content/data/t10k-images-idx3-ubyte",
+      "/content/data/t10k-labels-idx1-ubyte");
+  for (int i = 0; i < 3; i++)
+    timeAndStoreOperations("gpu_mnist.txt");
   return 0;
 }

@@ -5,6 +5,8 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <string>
+#include <chrono>
+#include <fstream>
 
 #include <numeric> //std::iota
 
@@ -123,70 +125,85 @@ void input(std::string ipath, std::string lpath, std::string ipath2, std::string
 }
 
 
+void timeAndStoreOperations(const std::string& filePath)
+{
+	std::ofstream outputFile(filePath, std::ios::app);
+	std::cout << "Using Eigen ver: " << EIGEN_WORLD_VERSION << "." << 
+								EIGEN_MAJOR_VERSION << "." << EIGEN_MINOR_VERSION << std::endl;
+
+	Network nn;
+	nn.add(new DenseLayer(28*28, 100));
+	nn.add(new ActivationLayer(tanh2, tanh_prime));
+	nn.add(new DenseLayer(100, 50));
+	nn.add(new ActivationLayer(tanh2, tanh_prime));
+	nn.add(new DenseLayer(50, 10));
+	nn.add(new ActivationLayer(tanh2, tanh_prime));
+
+	nn.use(mse, mse_prime);
+
+	//train
+	printMatrixSize("x_train", x_train);
+	printMatrixSize("y_train", y_train);
+
+	// Measure execution time
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	nn.fit(x_train.block<1000,784>(0,0), y_train.block<1000,10>(0,0), epoch, 0.1f);
+
+	//test
+	std::vector<Eigen::MatrixXf> output = nn.predict(x_valid(Eigen::seq(0, 2), Eigen::indexing::all));
+
+	// End timing
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+	outputFile << duration << std::endl;
+
+	outputFile.close();
+
+	std::cout << "Predicted values: " << std::endl;
+	for (Eigen::MatrixXf out : output)
+	{
+			// std::cout << out << std::endl;
+			int maxIndex = -1;
+			float maxValue = -1000;
+			for (int i = 0; i < out.cols(); ++i)
+			{
+					if (out(0, i) > maxValue)
+					{
+							maxValue = out(0, i);
+							maxIndex = i;
+					}
+			}
+			std::cout << maxIndex << " ";
+	}
+	std::cout << "\nTrue values: " << std::endl;
+
+
+	auto top3 = y_valid(Eigen::seq(0, 2), Eigen::indexing::all);
+	for (int i = 0; i < top3.rows(); ++i)
+	{
+			//std::cout << top3.row(i) << std::endl;
+			int maxIndex = -1;
+			for (int j = 0; j < top3.cols(); ++j)
+			{
+					if (top3(i, j) == 1)
+					{
+							maxIndex = j;
+							break;
+					}
+			}
+			std::cout << maxIndex << " ";
+	} 
+}
+
 int main()
 {
-    std::cout << "Using Eigen ver: " << EIGEN_WORLD_VERSION << "." << 
-                  EIGEN_MAJOR_VERSION << "." << EIGEN_MINOR_VERSION << std::endl;
-
-    input("/content/data/train-images-idx3-ubyte",
-        "/content/data/train-labels-idx1-ubyte",
-        "/content/data/t10k-images-idx3-ubyte",
-        "/content/data/t10k-labels-idx1-ubyte");
-
-    Network nn;
-    nn.add(new DenseLayer(28*28, 100));
-    nn.add(new ActivationLayer(tanh2, tanh_prime));
-    nn.add(new DenseLayer(100, 50));
-    nn.add(new ActivationLayer(tanh2, tanh_prime));
-    nn.add(new DenseLayer(50, 10));
-    nn.add(new ActivationLayer(tanh2, tanh_prime));
-
-    nn.use(mse, mse_prime);
-
-    //train
-    printMatrixSize("x_train", x_train);
-    printMatrixSize("y_train", y_train);
-
-    nn.fit(x_train.block<1000,784>(0,0), y_train.block<1000,10>(0,0), epoch, 0.1f);
-
-
-    //test
-    std::vector<Eigen::MatrixXf> output = nn.predict(x_valid(Eigen::seq(0, 2), Eigen::indexing::all));
-
-    std::cout << "Predicted values: " << std::endl;
-    for (Eigen::MatrixXf out : output)
-    {
-       // std::cout << out << std::endl;
-        int maxIndex = -1;
-        float maxValue = -1000;
-        for (int i = 0; i < out.cols(); ++i)
-        {
-            if (out(0, i) > maxValue)
-            {
-                maxValue = out(0, i);
-                maxIndex = i;
-            }
-        }
-        std::cout << maxIndex << " ";
-    }
-    std::cout << "\nTrue values: " << std::endl;
-
-
-    auto top3 = y_valid(Eigen::seq(0, 2), Eigen::indexing::all);
-    for (int i = 0; i < top3.rows(); ++i)
-    {
-        //std::cout << top3.row(i) << std::endl;
-        int maxIndex = -1;
-        for (int j = 0; j < top3.cols(); ++j)
-        {
-            if (top3(i, j) == 1)
-            {
-                maxIndex = j;
-                break;
-            }
-        }
-        std::cout << maxIndex << " ";
-    } 
-
-    return 0;
+	input("/content/data/train-images-idx3-ubyte",
+		"/content/data/train-labels-idx1-ubyte",
+		"/content/data/t10k-images-idx3-ubyte",
+		"/content/data/t10k-labels-idx1-ubyte");
+	for (int i = 0; i < 3; i++)
+		timeAndStoreOperations("cpu_mnist.txt");
+	return 0;
 }
