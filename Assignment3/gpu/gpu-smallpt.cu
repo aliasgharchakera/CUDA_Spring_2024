@@ -19,6 +19,7 @@
 
 #define REFRACTIVE_INDEX_OUT 1.0
 #define REFRACTIVE_INDEX_IN  1.5
+#define ARRAYSIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 #pragma endregion
 
@@ -184,8 +185,7 @@ namespace smallpt {
 		// Kernel execution
 		const dim3 nblocks(w / 16u, h / 16u);
 		const dim3 nthreads(16u, 16u);
-		kernel<<< nblocks, nthreads >>>(dev_spheres, _countof(g_spheres), 
-										w, h, dev_Ls, nb_samples);
+		kernel<<< nblocks, nthreads >>>(dev_spheres, ARRAYSIZE(g_spheres), w, h, dev_Ls, nb_samples);
 
 		// Set up host memory
 		Vector3* Ls = (Vector3*)malloc(nb_pixels * sizeof(Vector3));
