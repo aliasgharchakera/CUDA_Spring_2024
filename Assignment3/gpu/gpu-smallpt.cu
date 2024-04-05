@@ -9,6 +9,9 @@
 #include "sphere.hpp"
 
 #include "cuda_tools.hpp"
+#include <iostream>
+#include <fstream>
+#include <chrono>
 
 #pragma endregion
 
@@ -205,7 +208,29 @@ namespace smallpt {
 
 int main(int argc, char* argv[]) {
 	const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
-	smallpt::Render(nb_samples);
+	// print the number of samples
+	std::cout << "Number of samples: " << nb_samples << std::endl;
+	// Store the results in a text file
+	std::ofstream outputFile("gpu_timing.txt");
+	if (!outputFile.is_open()) {
+		std::cerr << "Failed to open the output file." << std::endl;
+		return 1;
+	}
+
+	// Run the code for different nb_samples and time it
+	for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
+		for (int i = 0; i < 3; i++) {
+			auto start = std::chrono::high_resolution_clock::now();
+			smallpt::Render(samples);
+			auto end = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+			// Store the timing results in the text file
+			outputFile << "nb_samples: " << samples << ", time: " << duration << " ms" << std::endl;
+		}
+	}
+
+	outputFile.close();
 
 	return 0;
 }
