@@ -1,0 +1,15 @@
+nb_samples: 1, time: 754 ms
+nb_samples: 1, time: 482 ms
+nb_samples: 1, time: 459 ms
+nb_samples: 2, time: 665 ms
+nb_samples: 2, time: 670 ms
+nb_samples: 2, time: 913 ms
+nb_samples: 4, time: 1322 ms
+nb_samples: 4, time: 1197 ms
+nb_samples: 4, time: 1111 ms
+nb_samples: 8, time: 1983 ms
+nb_samples: 8, time: 1979 ms
+nb_samples: 8, time: 1991 ms
+nb_samples: 16, time: 3934 ms
+nb_samples: 16, time: 3686 ms
+nb_samples: 16, time: 3687 ms

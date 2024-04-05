@@ -1,0 +1,9 @@
+nb_samples: 1, time: 25998 ms
+nb_samples: 1, time: 25876 ms
+nb_samples: 1, time: 26038 ms
+nb_samples: 2, time: 52528 ms
+nb_samples: 2, time: 52528 ms
+nb_samples: 2, time: 51772 ms
+nb_samples: 4, time: 102744 ms
+nb_samples: 4, time: 104286 ms
+nb_samples: 4, time: 103304 ms
