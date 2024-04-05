@@ -207,9 +207,13 @@ namespace smallpt {
 }
 
 int main(int argc, char* argv[]) {
-	const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
+	// const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
+
+	const std::uint32_t nb_samples = (2 <= argc && strcmp(argv[2], "--all") == 0) ? atoi(argv[1]) / 4 : 1;
+    bool run_all = (2 <= argc && strcmp(argv[2], "--all") == 0);
 	// print the number of samples
 	std::cout << "Number of samples: " << nb_samples << std::endl;
+	 std::cout << "Run all: " << (run_all ? "true" : "false") << std::endl;
 	// Store the results in a text file
 	std::ofstream outputFile("gpu_timing.txt");
 	if (!outputFile.is_open()) {
