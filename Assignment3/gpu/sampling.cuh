@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 namespace smallpt {
 
-	__device__ __host__ inline Vector3 UniformSampleOnHemisphere(double u1, 
+	__device__ inline Vector3 UniformSampleOnHemisphere(double u1, 
 														double u2) {
 		// u1 := cos_theta
 		const double sin_theta = std::sqrt(fmax(0.0, 1.0 - u1 * u1));
@@ -26,7 +26,7 @@ namespace smallpt {
 		};
 	}
 
-	__device__ __host__ inline Vector3 CosineWeightedSampleOnHemisphere(double u1, 
+	__device__ inline Vector3 CosineWeightedSampleOnHemisphere(double u1, 
 															   double u2) {
 		const double cos_theta = sqrt(1.0 - u1);
 		const double sin_theta = sqrt(u1);

@@ -1,19 +1,11 @@
 #pragma once
 
 //-----------------------------------------------------------------------------
-// CUDA Includes
-//-----------------------------------------------------------------------------
-#pragma region
-
-#include "curand_kernel.h"
-
-#pragma endregion
-
-//-----------------------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------------------
 #pragma region
 
+#include "rng.hpp"
 #include "vector.hpp"
 
 #pragma endregion
@@ -23,30 +15,31 @@
 //-----------------------------------------------------------------------------
 namespace smallpt {
 
-	__device__ __host__ inline double Reflectance0(double n1, double n2) {
+	[[nodiscard]]
+	constexpr double Reflectance0(double n1, double n2) noexcept {
 		const double sqrt_R0 = (n1 - n2) / (n1 + n2);
 		return sqrt_R0 * sqrt_R0;
 	}
 
-	__device__ __host__ inline double SchlickReflectance(double n1, 
-												double n2, 
-												double c) {
-		
+	[[nodiscard]]
+	constexpr double SchlickReflectance(double n1, double n2, double c) noexcept {
 		const double R0 = Reflectance0(n1, n2);
 		return R0 + (1.0 - R0) * c * c * c * c * c;
 	}
 
-	__device__ __host__ inline const Vector3 IdealSpecularReflect(const Vector3& d, 
-														 const Vector3& n) {
+	[[nodiscard]]
+	constexpr const Vector3 IdealSpecularReflect(const Vector3& d, 
+												 const Vector3& n) noexcept {
 		return d - 2.0 * n.Dot(d) * n;
 	}
 
-	__device__ __host__ inline const Vector3 IdealSpecularTransmit(const Vector3& d, 
-														  const Vector3& n, 
-														  double n_out, 
-														  double n_in, 
-														  double& pr, 
-														  curandState* state) {
+	[[nodiscard]]
+	inline const Vector3 IdealSpecularTransmit(const Vector3& d, 
+											   const Vector3& n, 
+											   double n_out, 
+											   double n_in, 
+											   double& pr, 
+											   RNG& rng) noexcept {
 		
 		const Vector3 d_Re = IdealSpecularReflect(d, n);
 
@@ -67,7 +60,7 @@ namespace smallpt {
 
 		const double Re = SchlickReflectance(n_out, n_in, c);
 		const double p_Re = 0.25 + 0.5 * Re;
-		if (curand_uniform_double(state) < p_Re) {
+		if (rng.Uniform() < p_Re) {
 			pr = (Re / p_Re);
 			return d_Re;
 		}

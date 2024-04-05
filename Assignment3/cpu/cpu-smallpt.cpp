@@ -4,8 +4,8 @@
 #pragma region
 
 #include "imageio.hpp"
-#include "sampling.cuh"
-#include "specular.cuh"
+#include "sampling.hpp"
+#include "specular.hpp"
 #include "sphere.hpp"
 
 #pragma endregion

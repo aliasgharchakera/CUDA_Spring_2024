@@ -22,7 +22,7 @@ namespace smallpt {
 		// Constructors and Destructors
 		//---------------------------------------------------------------------
 
-		__device__ __host__ explicit Ray(Vector3 o, 
+		__device__ explicit Ray(Vector3 o, 
 								Vector3 d, 
 								double tmin = 0.0, 
 								double tmax = std::numeric_limits< double >::infinity(), 
@@ -47,7 +47,7 @@ namespace smallpt {
 		// Member Methods
 		//---------------------------------------------------------------------
 
-		__device__ __host__ const Vector3 operator()(double t) const {
+		__device__ const Vector3 operator()(double t) const {
 			return m_o + m_d * t;
 		}
 
