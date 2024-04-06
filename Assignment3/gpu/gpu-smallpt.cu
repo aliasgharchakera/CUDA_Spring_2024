@@ -207,7 +207,14 @@ namespace smallpt {
 }
 
 int main(int argc, char* argv[]) {
-	const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
+	// const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
+
+	std::uint32_t nb_samples = 1;
+
+    if (argc >= 2) {
+        nb_samples = atoi(argv[1]) / 4;
+    }
+
 
 	bool all_flag = false;
     if (argc >= 3 && strcmp(argv[2], "--all") == 0) {
