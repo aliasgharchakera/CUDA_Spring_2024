@@ -243,6 +243,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else {
+		std::cout << "Running for one sample" << std::endl;
 		for (int i = 0; i < 3; i++) {
 			auto start = std::chrono::high_resolution_clock::now();
 			smallpt::Render(nb_samples);
