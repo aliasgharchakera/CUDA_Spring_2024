@@ -228,6 +228,31 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Run the code for different nb_samples and time it
+	if (all_flag) {
+		for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
+			for (int i = 0; i < 3; i++) {
+				auto start = std::chrono::high_resolution_clock::now();
+				smallpt::Render(samples);
+				auto end = std::chrono::high_resolution_clock::now();
+				auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+				// Store the timing results in the text file
+				outputFile << "nb_samples: " << samples << ", time: " << duration << " ms" << std::endl;
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < 3; i++) {
+			auto start = std::chrono::high_resolution_clock::now();
+			smallpt::Render(nb_samples);
+			auto end = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+			// Store the timing results in the text file
+			outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
+		}
+	}
+	
 	// for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
 	// 	for (int i = 0; i < 3; i++) {
 	// 		auto start = std::chrono::high_resolution_clock::now();
@@ -240,15 +265,15 @@ int main(int argc, char* argv[]) {
 	// 	}
 	// }
 
-	for (int i = 0; i < 3; i++) {
-		auto start = std::chrono::high_resolution_clock::now();
-		smallpt::Render(nb_samples);
-		auto end = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+	// for (int i = 0; i < 3; i++) {
+	// 	auto start = std::chrono::high_resolution_clock::now();
+	// 	smallpt::Render(nb_samples);
+	// 	auto end = std::chrono::high_resolution_clock::now();
+	// 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-		// Store the timing results in the text file
-		outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
-	}
+	// 	// Store the timing results in the text file
+	// 	outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
+	// }
 
 	outputFile.close();
 
