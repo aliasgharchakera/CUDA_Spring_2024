@@ -207,13 +207,13 @@ namespace smallpt {
 }
 
 int main(int argc, char* argv[]) {
-	// const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
+	const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
 
-	const std::uint32_t nb_samples = (2 <= argc && strcmp(argv[2], "--all") == 0) ? atoi(argv[1]) / 4 : 1;
-    bool run_all = (2 <= argc && strcmp(argv[2], "--all") == 0);
+	// const std::uint32_t nb_samples = (2 <= argc && strcmp(argv[2], "--all") == 0) ? atoi(argv[1]) / 4 : 1;
+    // bool run_all = (2 <= argc && strcmp(argv[2], "--all") == 0);
 	// print the number of samples
 	std::cout << "Number of samples: " << nb_samples << std::endl;
-	 std::cout << "Run all: " << (run_all ? "true" : "false") << std::endl;
+	//  std::cout << "Run all: " << (run_all ? "true" : "false") << std::endl;
 	// Store the results in a text file
 	std::ofstream outputFile("gpu_timing.txt");
 	if (!outputFile.is_open()) {
@@ -222,16 +222,26 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Run the code for different nb_samples and time it
-	for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
-		for (int i = 0; i < 3; i++) {
-			auto start = std::chrono::high_resolution_clock::now();
-			smallpt::Render(samples);
-			auto end = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+	// for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
+	// 	for (int i = 0; i < 3; i++) {
+	// 		auto start = std::chrono::high_resolution_clock::now();
+	// 		smallpt::Render(samples);
+	// 		auto end = std::chrono::high_resolution_clock::now();
+	// 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-			// Store the timing results in the text file
-			outputFile << "nb_samples: " << samples << ", time: " << duration << " ms" << std::endl;
-		}
+	// 		// Store the timing results in the text file
+	// 		outputFile << "nb_samples: " << samples << ", time: " << duration << " ms" << std::endl;
+	// 	}
+	// }
+
+	for (int i = 0; i < 3; i++) {
+		auto start = std::chrono::high_resolution_clock::now();
+		smallpt::Render(nb_samples);
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+		// Store the timing results in the text file
+		outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
 	}
 
 	outputFile.close();
