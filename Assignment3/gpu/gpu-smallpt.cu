@@ -229,6 +229,7 @@ int main(int argc, char* argv[]) {
 
 	// Run the code for different nb_samples and time it
 	if (all_flag) {
+		std::cout << "Running for all samples" << std::endl;
 		for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
 			for (int i = 0; i < 3; i++) {
 				auto start = std::chrono::high_resolution_clock::now();
@@ -252,7 +253,7 @@ int main(int argc, char* argv[]) {
 			outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
 		}
 	}
-	
+
 	// for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
 	// 	for (int i = 0; i < 3; i++) {
 	// 		auto start = std::chrono::high_resolution_clock::now();
