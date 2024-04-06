@@ -212,6 +212,7 @@ int main(int argc, char* argv[]) {
 	std::uint32_t nb_samples = 1;
 
     if (argc >= 2) {
+		std::cout << "Number of samples: " << atoi(argv[1]) << std::endl;
         nb_samples = atoi(argv[1]) / 4;
     }
 
