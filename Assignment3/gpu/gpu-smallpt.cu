@@ -1,37 +1,18 @@
-//-----------------------------------------------------------------------------
-// Includes
-//-----------------------------------------------------------------------------
-#pragma region
-
 #include "imageio.hpp"
 #include "sampling.cuh"
 #include "specular.cuh"
 #include "sphere.hpp"
-
 #include "cuda_tools.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <chrono>
-
-#pragma endregion
-
-//-----------------------------------------------------------------------------
-// Defines
-//-----------------------------------------------------------------------------
-#pragma region
 
 #define REFRACTIVE_INDEX_OUT 1.0
 #define REFRACTIVE_INDEX_IN  1.5
 #define ARRAYSIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
-#pragma endregion
-
-//-----------------------------------------------------------------------------
-// Declarations and Definitions
-//-----------------------------------------------------------------------------
 namespace smallpt {
-
-	//__constant__ Sphere dev_spheres[9];
 
 	const Sphere g_spheres[] = {
 		Sphere(1e5,  Vector3(1e5 + 1, 40.8, 81.6),   Vector3(),   Vector3(0.75,0.25,0.25), Reflection_t::Diffuse),	 //Left
@@ -45,11 +26,8 @@ namespace smallpt {
 		Sphere(600,	 Vector3(50, 681.6 - .27, 81.6), Vector3(12), Vector3(),               Reflection_t::Diffuse)	 //Light
 	};
 
-	__device__ inline bool Intersect(const Sphere* dev_spheres, 
-									 std::size_t nb_spheres, 
-									 const Ray& ray, 
-									 size_t& id) {
-		
+	__device__ inline bool Intersect(const Sphere* dev_spheres, std::size_t nb_spheres, const Ray& ray, size_t& id) {
+
 		bool hit = false;
 		for (std::size_t i = 0u; i < nb_spheres; ++i) {
 			if (dev_spheres[i].Intersect(ray)) {
@@ -61,17 +39,16 @@ namespace smallpt {
 		return hit;
 	}
 
-	__device__ static Vector3 Radiance(const Sphere* dev_spheres, 
-									   std::size_t nb_spheres,
-									   const Ray& ray, 
-									   curandState* state) {
-		
+	__device__ static Vector3 Radiance(const Sphere* dev_spheres, std::size_t nb_spheres, const Ray& ray, curandState* state) {
+
 		Ray r = ray;
 		Vector3 L;
 		Vector3 F(1.0);
 
 		while (true) {
+
 			std::size_t id;
+
 			if (!Intersect(dev_spheres, nb_spheres, r, id)) {
 				return L;
 			}
@@ -122,12 +99,7 @@ namespace smallpt {
 		}
 	}
 
-	__global__ static void kernel(const Sphere* dev_spheres, 
-								  std::size_t nb_spheres,
-								  std::uint32_t w, 
-								  std::uint32_t h, 
-								  Vector3* Ls, 
-								  std::uint32_t nb_samples) {
+	__global__ static void kernel(const Sphere* dev_spheres, std::size_t nb_spheres, std::uint32_t w, std::uint32_t h, Vector3* Ls, std::uint32_t nb_samples) {
 		
 		const std::uint32_t x = threadIdx.x + blockIdx.x * blockDim.x;
 		const std::uint32_t y = threadIdx.y + blockIdx.y * blockDim.y;
@@ -172,18 +144,19 @@ namespace smallpt {
 	}
 
 	static void Render(std::uint32_t nb_samples) noexcept {
+
 		const std::uint32_t w = 1024u;
 		const std::uint32_t h = 768u;
 		const std::uint32_t nb_pixels = w * h;
 
 		// Set up device memory
-		//HANDLE_ERROR( cudaMemcpyToSymbol(dev_spheres, spheres, sizeof(spheres)) );
+		//cudaCheckErr( cudaMemcpyToSymbol(dev_spheres, spheres, sizeof(spheres)) );
 		Sphere* dev_spheres;
-		HANDLE_ERROR(cudaMalloc((void**)&dev_spheres, sizeof(g_spheres)));
-		HANDLE_ERROR(cudaMemcpy(dev_spheres, g_spheres, sizeof(g_spheres), cudaMemcpyHostToDevice));
+		cudaCheckErr(cudaMalloc((void**)&dev_spheres, sizeof(g_spheres)));
+		cudaCheckErr(cudaMemcpy(dev_spheres, g_spheres, sizeof(g_spheres), cudaMemcpyHostToDevice));
 		Vector3* dev_Ls;
-		HANDLE_ERROR(cudaMalloc((void**)&dev_Ls, nb_pixels * sizeof(Vector3)));
-		HANDLE_ERROR(cudaMemset(dev_Ls, 0, nb_pixels * sizeof(Vector3)));
+		cudaCheckErr(cudaMalloc((void**)&dev_Ls, nb_pixels * sizeof(Vector3)));
+		cudaCheckErr(cudaMemset(dev_Ls, 0, nb_pixels * sizeof(Vector3)));
 
 		// Kernel execution
 		const dim3 nblocks(w / 16u, h / 16u);
@@ -193,11 +166,11 @@ namespace smallpt {
 		// Set up host memory
 		Vector3* Ls = (Vector3*)malloc(nb_pixels * sizeof(Vector3));
 		// Transfer device -> host
-		HANDLE_ERROR(cudaMemcpy(Ls, dev_Ls, nb_pixels * sizeof(Vector3), cudaMemcpyDeviceToHost));
+		cudaCheckErr(cudaMemcpy(Ls, dev_Ls, nb_pixels * sizeof(Vector3), cudaMemcpyDeviceToHost));
 
 		// Clean up device memory
-		HANDLE_ERROR(cudaFree(dev_Ls));
-		HANDLE_ERROR(cudaFree(dev_spheres));
+		cudaCheckErr(cudaFree(dev_Ls));
+		cudaCheckErr(cudaFree(dev_spheres));
 
 		WritePPM(w, h, Ls);
 

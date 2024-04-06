@@ -1,31 +1,9 @@
 #pragma once
 
-//-----------------------------------------------------------------------------
-// Includes
-//-----------------------------------------------------------------------------
-#pragma region
-
 #include "geometry.cuh"
 
-#pragma endregion
-
-//-----------------------------------------------------------------------------
-// Defines
-//-----------------------------------------------------------------------------
-#pragma region
-
 #define EPSILON_SPHERE 1e-4
-
-#pragma endregion
-
-//-----------------------------------------------------------------------------
-// Declarations and Definitions
-//-----------------------------------------------------------------------------
 namespace smallpt {
-
-	//-------------------------------------------------------------------------
-	// Declarations and Definitions: Reflection_t
-	//-------------------------------------------------------------------------
 
 	enum struct Reflection_t {
 		Diffuse,
@@ -33,21 +11,9 @@ namespace smallpt {
 		Refractive
 	};
 
-	//-------------------------------------------------------------------------
-	// Declarations and Definitions: Sphere
-	//-------------------------------------------------------------------------
-
 	struct Sphere {
 
-		//---------------------------------------------------------------------
-		// Constructors and Destructors
-		//---------------------------------------------------------------------
-
-		__host__ __device__ explicit Sphere(double r,
-											Vector3 p,
-											Vector3 e,
-											Vector3 f,
-											Reflection_t reflection_t) noexcept
+		__host__ __device__ explicit Sphere(double r, Vector3 p, Vector3 e, Vector3 f, Reflection_t reflection_t) noexcept
 			: m_r(r),
 			m_p(std::move(p)),
 			m_e(std::move(e)),
@@ -57,17 +23,9 @@ namespace smallpt {
 		Sphere(Sphere&& sphere) noexcept = default;
 		~Sphere() = default;
 
-		//---------------------------------------------------------------------
-		// Assignment Operators
-		//---------------------------------------------------------------------
-
 		Sphere& operator=(const Sphere& sphere) = default;
 		Sphere& operator=(Sphere&& sphere) = default;
 		
-		//---------------------------------------------------------------------
-		// Member Methods
-		//---------------------------------------------------------------------
-
 		__device__ bool Intersect(const Ray& ray) const {
 			// (o + t*d - p) . (o + t*d - p) - r*r = 0
 			// <=> (d . d) * t^2 + 2 * d . (o - p) * t + (o - p) . (o - p) - r*r = 0
@@ -107,11 +65,7 @@ namespace smallpt {
 
 			return false;
 		}
-
-		//---------------------------------------------------------------------
-		// Member Variables
-		//---------------------------------------------------------------------
-
+		
 		double m_r;
 		Vector3 m_p; // position
 		Vector3 m_e; // emission

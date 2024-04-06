@@ -1,26 +1,8 @@
 #pragma once
 
-//-----------------------------------------------------------------------------
-// CUDA Includes
-//-----------------------------------------------------------------------------
-#pragma region
-
 #include "curand_kernel.h"
-
-#pragma endregion
-
-//-----------------------------------------------------------------------------
-// Includes
-//-----------------------------------------------------------------------------
-#pragma region
-
 #include "vector.hpp"
 
-#pragma endregion
-
-//-----------------------------------------------------------------------------
-// Declarations and Definitions
-//-----------------------------------------------------------------------------
 namespace smallpt {
 
 	__device__ inline double Reflectance0(double n1, double n2) {
@@ -28,25 +10,17 @@ namespace smallpt {
 		return sqrt_R0 * sqrt_R0;
 	}
 
-	__device__ inline double SchlickReflectance(double n1, 
-												double n2, 
-												double c) {
+	__device__ inline double SchlickReflectance(double n1, double n2, double c) {
 		
 		const double R0 = Reflectance0(n1, n2);
 		return R0 + (1.0 - R0) * c * c * c * c * c;
 	}
 
-	__device__ inline const Vector3 IdealSpecularReflect(const Vector3& d, 
-														 const Vector3& n) {
+	__device__ inline const Vector3 IdealSpecularReflect(const Vector3& d, const Vector3& n) {
 		return d - 2.0 * n.Dot(d) * n;
 	}
 
-	__device__ inline const Vector3 IdealSpecularTransmit(const Vector3& d, 
-														  const Vector3& n, 
-														  double n_out, 
-														  double n_in, 
-														  double& pr, 
-														  curandState* state) {
+	__device__ inline const Vector3 IdealSpecularTransmit(const Vector3& d, const Vector3& n, double n_out, double n_in, double& pr, curandState* state) {
 		
 		const Vector3 d_Re = IdealSpecularReflect(d, n);
 

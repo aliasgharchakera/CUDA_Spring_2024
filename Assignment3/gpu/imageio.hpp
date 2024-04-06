@@ -1,13 +1,7 @@
 #pragma once
 
-//-----------------------------------------------------------------------------
-// Includes
-//-----------------------------------------------------------------------------
-#pragma region
-
 #include "vector.hpp"
 
-#pragma endregion
 #include <fstream>
 
 namespace smallpt {
