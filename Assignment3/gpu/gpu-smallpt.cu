@@ -207,14 +207,12 @@ namespace smallpt {
 }
 
 int main(int argc, char* argv[]) {
-	// const std::uint32_t nb_samples = (2 == argc) ? atoi(argv[1]) / 4 : 1;
+	
+  std::uint32_t nb_samples = 1;
 
-	std::uint32_t nb_samples = 1;
-
-    if (argc >= 2) {
-		std::cout << "Number of samples: " << atoi(argv[1]) << std::endl;
-        nb_samples = atoi(argv[1]) / 4;
-    }
+  if (argc >= 2) {
+      nb_samples = atoi(argv[1]) / 4;
+  }
 
 
 	bool all_flag = false;
@@ -222,12 +220,9 @@ int main(int argc, char* argv[]) {
         all_flag = true;
     }
 
-	// const std::uint32_t nb_samples = (2 <= argc && strcmp(argv[2], "--all") == 0) ? atoi(argv[1]) / 4 : 1;
-    // bool run_all = (2 <= argc && strcmp(argv[2], "--all") == 0);
 	// print the number of samples
 	std::cout << "Number of samples: " << nb_samples << std::endl;
-	std::cout << "All flag: " << all_flag << std::endl;
-	//  std::cout << "Run all: " << (run_all ? "true" : "false") << std::endl;
+	
 	// Store the results in a text file
 	std::ofstream outputFile("gpu_timing.txt");
 	if (!outputFile.is_open()) {
@@ -237,9 +232,10 @@ int main(int argc, char* argv[]) {
 
 	// Run the code for different nb_samples and time it
 	if (all_flag) {
-		std::cout << "Running for all samples" << std::endl;
+		// std::cout << "Running for all samples" << std::endl;
 		for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
-			for (int i = 0; i < 3; i++) {
+      int end = (samples==1) ? 4 : 3;
+			for (int i = 0; i < end; i++) {
 				auto start = std::chrono::high_resolution_clock::now();
 				smallpt::Render(samples);
 				auto end = std::chrono::high_resolution_clock::now();
@@ -251,8 +247,8 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else {
-		std::cout << "Running for one sample" << std::endl;
-		for (int i = 0; i < 3; i++) {
+		// std::cout << "Running for one sample" << std::endl;
+		for (int i = 0; i < 5; i++) {
 			auto start = std::chrono::high_resolution_clock::now();
 			smallpt::Render(nb_samples);
 			auto end = std::chrono::high_resolution_clock::now();
@@ -262,28 +258,6 @@ int main(int argc, char* argv[]) {
 			outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
 		}
 	}
-
-	// for (std::uint32_t samples = 1; samples <= nb_samples; samples *= 2) {
-	// 	for (int i = 0; i < 3; i++) {
-	// 		auto start = std::chrono::high_resolution_clock::now();
-	// 		smallpt::Render(samples);
-	// 		auto end = std::chrono::high_resolution_clock::now();
-	// 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-
-	// 		// Store the timing results in the text file
-	// 		outputFile << "nb_samples: " << samples << ", time: " << duration << " ms" << std::endl;
-	// 	}
-	// }
-
-	// for (int i = 0; i < 3; i++) {
-	// 	auto start = std::chrono::high_resolution_clock::now();
-	// 	smallpt::Render(nb_samples);
-	// 	auto end = std::chrono::high_resolution_clock::now();
-	// 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-
-	// 	// Store the timing results in the text file
-	// 	outputFile << "nb_samples: " << nb_samples << ", time: " << duration << " ms" << std::endl;
-	// }
 
 	outputFile.close();
 
