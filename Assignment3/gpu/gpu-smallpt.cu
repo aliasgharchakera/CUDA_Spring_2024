@@ -14,43 +14,43 @@
 
 namespace smallpt {
 
-	const Sphere g_spheres[] = {
-		Sphere(1e5,  Vector3(1e5 + 1, 40.8, 81.6),   Vector3(),   Vector3(0.75,0.25,0.25), Reflection_t::Diffuse),	 //Left
-		Sphere(1e5,  Vector3(-1e5 + 99, 40.8, 81.6), Vector3(),   Vector3(0.25,0.25,0.75), Reflection_t::Diffuse),	 //Right
-		Sphere(1e5,  Vector3(50, 40.8, 1e5),         Vector3(),   Vector3(0.75),           Reflection_t::Diffuse),	 //Back
-		Sphere(1e5,  Vector3(50, 40.8, -1e5 + 170),  Vector3(),   Vector3(),               Reflection_t::Diffuse),	 //Front
-		Sphere(1e5,  Vector3(50, 1e5, 81.6),         Vector3(),   Vector3(0.75),           Reflection_t::Diffuse),	 //Bottom
-		Sphere(1e5,  Vector3(50, -1e5 + 81.6, 81.6), Vector3(),   Vector3(0.75),           Reflection_t::Diffuse),	 //Top
-		Sphere(16.5, Vector3(27, 16.5, 47),          Vector3(),   Vector3(0.999),          Reflection_t::Specular),	 //Mirror
-		Sphere(16.5, Vector3(73, 16.5, 78),          Vector3(),   Vector3(0.999),          Reflection_t::Refractive),//Glass
-		Sphere(600,	 Vector3(50, 681.6 - .27, 81.6), Vector3(12), Vector3(),               Reflection_t::Diffuse)	 //Light
-	};
+	// const Sphere g_spheres[] = {
+	// 	Sphere(1e5,  Vector3(1e5 + 1, 40.8, 81.6),   Vector3(),   Vector3(0.75,0.25,0.25), Reflection_t::Diffuse),	 //Left
+	// 	Sphere(1e5,  Vector3(-1e5 + 99, 40.8, 81.6), Vector3(),   Vector3(0.25,0.25,0.75), Reflection_t::Diffuse),	 //Right
+	// 	Sphere(1e5,  Vector3(50, 40.8, 1e5),         Vector3(),   Vector3(0.75),           Reflection_t::Diffuse),	 //Back
+	// 	Sphere(1e5,  Vector3(50, 40.8, -1e5 + 170),  Vector3(),   Vector3(),               Reflection_t::Diffuse),	 //Front
+	// 	Sphere(1e5,  Vector3(50, 1e5, 81.6),         Vector3(),   Vector3(0.75),           Reflection_t::Diffuse),	 //Bottom
+	// 	Sphere(1e5,  Vector3(50, -1e5 + 81.6, 81.6), Vector3(),   Vector3(0.75),           Reflection_t::Diffuse),	 //Top
+	// 	Sphere(16.5, Vector3(27, 16.5, 47),          Vector3(),   Vector3(0.999),          Reflection_t::Specular),	 //Mirror
+	// 	Sphere(16.5, Vector3(73, 16.5, 78),          Vector3(),   Vector3(0.999),          Reflection_t::Refractive),//Glass
+	// 	Sphere(600,	 Vector3(50, 681.6 - .27, 81.6), Vector3(12), Vector3(),               Reflection_t::Diffuse)	 //Light
+	// };
 
-//   const Sphere g_spheres[] = {
-//     // Room definition (large spheres for walls, floor, ceiling)
-//     // Sphere(1e5,  Vector3(1e5 + 1, 0, 0),    Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Left wall
-//     // Sphere(1e5,  Vector3(-1e5 + 99, 0, 0),  Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Right wall
-//     Sphere(1e5,  Vector3(50, 0, 1e5),       Vector3(), Vector3(0.85), Reflection_t::Diffuse), // Back wall
-//     // Sphere(1e5,  Vector3(50, 0, -1e5),      Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Front
-//     // Sphere(1e5,  Vector3(50, 1e5, 0),       Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Floor
-//     // Sphere(1e5,  Vector3(50, -1e5, 0),      Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Ceiling
+  const Sphere g_spheres[] = {
+    // Room definition (large spheres for walls, floor, ceiling)
+    // Sphere(1e5,  Vector3(1e5 + 1, 0, 0),    Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Left wall
+    // Sphere(1e5,  Vector3(-1e5 + 99, 0, 0),  Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Right wall
+    Sphere(1e5,  Vector3(50, 0, 1e5),       Vector3(), Vector3(0.85), Reflection_t::Diffuse), // Back wall
+    // Sphere(1e5,  Vector3(50, 0, -1e5),      Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Front
+    // Sphere(1e5,  Vector3(50, 1e5, 0),       Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Floor
+    // Sphere(1e5,  Vector3(50, -1e5, 0),      Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Ceiling
 
-//     // Spheres in the pyramid
-//     Sphere(10, Vector3(33, 53, 70),         Vector3(), Vector3(1,0,0), Reflection_t::Diffuse), // Bottom-left (red)
-//     Sphere(10, Vector3(33, 53, 40),         Vector3(), Vector3(0,1,0), Reflection_t::Diffuse), // Bottom-middle (green)
-//     Sphere(10, Vector3(67, 53, 70),         Vector3(), Vector3(0,1,0), Reflection_t::Diffuse), // Bottom-middle (green)
-//     Sphere(10, Vector3(67, 53, 40),         Vector3(), Vector3(0,0,1), Reflection_t::Diffuse), // Bottom-right (blue)
+    // Spheres in the pyramid
+    Sphere(10, Vector3(33, 53, 70),         Vector3(), Vector3(1,0.6,0.4), Reflection_t::Diffuse), // Bottom-left (orange)
+    Sphere(10, Vector3(33, 53, 40),         Vector3(), Vector3(0.999), Reflection_t::Specular), // Bottom-middle (mirror)
+    Sphere(10, Vector3(67, 53, 70),         Vector3(), Vector3(0.3,0.5,0.8), Reflection_t::Diffuse), // Bottom-middle (blue)
+    Sphere(10, Vector3(67, 53, 40),         Vector3(), Vector3(0.35,0.7,0.41), Reflection_t::Diffuse), // Bottom-right (green)
 
-//     Sphere(10, Vector3(33, 27, 70),         Vector3(), Vector3(0,1,0), Reflection_t::Diffuse), // Bottom-middle (green)
-//     Sphere(10, Vector3(33, 27, 40),         Vector3(), Vector3(0,0,1), Reflection_t::Diffuse), // Bottom-right (blue)
-//     Sphere(10, Vector3(67, 27, 70),         Vector3(), Vector3(0,0,1), Reflection_t::Diffuse), // Bottom-right (blue)
-//     Sphere(10, Vector3(67, 27, 40),         Vector3(), Vector3(1,0,0), Reflection_t::Diffuse), // Bottom-left (red)
+    Sphere(10, Vector3(33, 27, 70),         Vector3(), Vector3(0.35,0.7,0.41), Reflection_t::Diffuse), // Bottom-middle (green)
+    Sphere(10, Vector3(33, 27, 40),         Vector3(), Vector3(0.3,0.5,0.8), Reflection_t::Diffuse), // Bottom-right (blue)
+    Sphere(10, Vector3(67, 27, 70),         Vector3(), Vector3(0.999), Reflection_t::Specular), // Bottom-right (mirror)
+    Sphere(10, Vector3(67, 27, 40),         Vector3(), Vector3(1,0.6,0.4), Reflection_t::Diffuse), // Bottom-left (orange)
 
-//     Sphere(10, Vector3(50, 40, 55),         Vector3(), Vector3(0.5,0.5,0.5), Reflection_t::Diffuse), // Top (grey)
+    Sphere(10, Vector3(50, 40, 55),         Vector3(12), Vector3(), Reflection_t::Diffuse), // Top (light)
 
-//     // Ambient light (a large, very dimly emitting sphere overhead)
-//     Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(0.1), Vector3(), Reflection_t::Diffuse) // Light
-//   };
+    // Ambient light (a large, very dimly emitting sphere overhead)
+    Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(0.1), Vector3(), Reflection_t::Diffuse) // Light
+  };
 
 
 	__device__ inline bool Intersect(const Sphere* dev_spheres, std::size_t nb_spheres, const Ray& ray, size_t& id) {
