@@ -49,7 +49,7 @@ namespace smallpt {
     Sphere(10, Vector3(50, 40, 55),         Vector3(12), Vector3(), Reflection_t::Diffuse), // center (light)
 
     // Ambient light (a large, very dimly emitting sphere overhead)
-    // Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(1), Vector3(), Reflection_t::Diffuse) // Light
+    Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(0.1), Vector3(), Reflection_t::Diffuse) // Light
   };
 
 
