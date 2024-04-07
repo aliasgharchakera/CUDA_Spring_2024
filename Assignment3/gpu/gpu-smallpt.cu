@@ -46,10 +46,10 @@ namespace smallpt {
     Sphere(10, Vector3(67, 27, 70),         Vector3(), Vector3(0.999), Reflection_t::Specular), // Bottom-right (mirror)
     Sphere(10, Vector3(67, 27, 40),         Vector3(), Vector3(1,0.6,0.4), Reflection_t::Diffuse), // Bottom-left (orange)
 
-    Sphere(10, Vector3(50, 40, 55),         Vector3(12), Vector3(), Reflection_t::Diffuse), // Top (light)
+    Sphere(10, Vector3(50, 40, 55),         Vector3(12), Vector3(), Reflection_t::Diffuse), // center (light)
 
     // Ambient light (a large, very dimly emitting sphere overhead)
-    Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(10), Vector3(), Reflection_t::Diffuse) // Light
+    // Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(1), Vector3(), Reflection_t::Diffuse) // Light
   };
 
 
