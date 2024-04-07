@@ -26,6 +26,33 @@ namespace smallpt {
 		Sphere(600,	 Vector3(50, 681.6 - .27, 81.6), Vector3(12), Vector3(),               Reflection_t::Diffuse)	 //Light
 	};
 
+//   const Sphere g_spheres[] = {
+//     // Room definition (large spheres for walls, floor, ceiling)
+//     // Sphere(1e5,  Vector3(1e5 + 1, 0, 0),    Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Left wall
+//     // Sphere(1e5,  Vector3(-1e5 + 99, 0, 0),  Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Right wall
+//     Sphere(1e5,  Vector3(50, 0, 1e5),       Vector3(), Vector3(0.85), Reflection_t::Diffuse), // Back wall
+//     // Sphere(1e5,  Vector3(50, 0, -1e5),      Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Front
+//     // Sphere(1e5,  Vector3(50, 1e5, 0),       Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Floor
+//     // Sphere(1e5,  Vector3(50, -1e5, 0),      Vector3(), Vector3(0.75), Reflection_t::Diffuse), // Ceiling
+
+//     // Spheres in the pyramid
+//     Sphere(10, Vector3(33, 53, 70),         Vector3(), Vector3(1,0,0), Reflection_t::Diffuse), // Bottom-left (red)
+//     Sphere(10, Vector3(33, 53, 40),         Vector3(), Vector3(0,1,0), Reflection_t::Diffuse), // Bottom-middle (green)
+//     Sphere(10, Vector3(67, 53, 70),         Vector3(), Vector3(0,1,0), Reflection_t::Diffuse), // Bottom-middle (green)
+//     Sphere(10, Vector3(67, 53, 40),         Vector3(), Vector3(0,0,1), Reflection_t::Diffuse), // Bottom-right (blue)
+
+//     Sphere(10, Vector3(33, 27, 70),         Vector3(), Vector3(0,1,0), Reflection_t::Diffuse), // Bottom-middle (green)
+//     Sphere(10, Vector3(33, 27, 40),         Vector3(), Vector3(0,0,1), Reflection_t::Diffuse), // Bottom-right (blue)
+//     Sphere(10, Vector3(67, 27, 70),         Vector3(), Vector3(0,0,1), Reflection_t::Diffuse), // Bottom-right (blue)
+//     Sphere(10, Vector3(67, 27, 40),         Vector3(), Vector3(1,0,0), Reflection_t::Diffuse), // Bottom-left (red)
+
+//     Sphere(10, Vector3(50, 40, 55),         Vector3(), Vector3(0.5,0.5,0.5), Reflection_t::Diffuse), // Top (grey)
+
+//     // Ambient light (a large, very dimly emitting sphere overhead)
+//     Sphere(1e5, Vector3(50, -1e5 + 150, 0), Vector3(0.1), Vector3(), Reflection_t::Diffuse) // Light
+//   };
+
+
 	__device__ inline bool Intersect(const Sphere* dev_spheres, std::size_t nb_spheres, const Ray& ray, size_t& id) {
 
 		bool hit = false;
@@ -114,6 +141,7 @@ namespace smallpt {
 		curand_init(offset, 0u, 0u, &state);
 
 		const Vector3 eye = { 50.0, 52.0, 295.6 };
+    	// const Vector3 eye = { 50.0, 72.0, 295.6 };
 		const Vector3 gaze = Normalize(Vector3(0.0, -0.042612, -1.0));
 		const double fov = 0.5135;
 		const Vector3 cx = { w * fov / h, 0.0, 0.0 };
